@@ -1,0 +1,36 @@
+From 133819d420d962b6888c280352a5532da93f1a3a Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Wed, 9 Sep 2009 11:24:11 +0200
+Subject: [PATCH] Revert "Fix driver conf parsing in snd_config_hook_load_for_all_cards()"
+
+This reverts commit 96da0c842d14b40ce8e37726b259229634b3aa21.
+
+This way of fix brokes card-specific configuration loading.
+See http://bugzilla.redhat.com bug#521988 for details.
+
+Appropriate way to handle this problem is to fix the dmix configuration file.
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+---
+ src/conf.c |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/conf.c b/src/conf.c
+index 3f0dfe1..570c90f 100644
+--- a/src/conf.c
++++ b/src/conf.c
+@@ -3477,8 +3477,9 @@ int snd_config_hook_load_for_all_cards(snd_config_t *root, snd_config_t *config,
+ 			err = snd_determine_driver(card, &fdriver);
+ 			if (err < 0)
+ 				return err;
+-			if (snd_config_search(root, fdriver, &n) >= 0 &&
+-			    snd_config_get_string(n, &driver) >= 0) {
++			if (snd_config_search(root, fdriver, &n) >= 0) {
++				if (snd_config_get_string(n, &driver) < 0)
++					goto __err;
+ 				assert(driver);
+ 				while (1) {
+ 					char *s = strchr(driver, '.');
+-- 
+1.5.5.1
+

@@ -1,0 +1,65 @@
+From 1f126fd7c6ef37b04ad745609bbebf0dbbf2e1fd Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Wed, 9 Sep 2009 11:38:11 +0200
+Subject: [PATCH] Change dmix.conf to accept user configuration from defaults.dmix.<driver_id>.xxx
+
+An attempt to fix problem described in reverted patch "Fix driver conf
+parsing in snd_config_hook_load_for_all_cards()".
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+---
+ src/conf/pcm/dmix.conf |   12 ++++++------
+ 1 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/conf/pcm/dmix.conf b/src/conf/pcm/dmix.conf
+index 4108ddb..e62cb29 100644
+--- a/src/conf/pcm/dmix.conf
++++ b/src/conf/pcm/dmix.conf
+@@ -63,12 +63,12 @@ pcm.!dmix {
+ 			name {
+ 				@func concat
+ 				strings [
+-					"cards."
++					"defaults.dmix."
+ 					{
+ 						@func card_driver
+ 						card $CARD
+ 					}
+-					".pcm.dmix.period_size"
++					".period_size"
+ 				]
+ 			}
+ 			default 1024
+@@ -78,12 +78,12 @@ pcm.!dmix {
+ 			name {
+ 				@func concat
+ 				strings [
+-					"cards."
++					"defaults.dmix."
+ 					{
+ 						@func card_driver
+ 						card $CARD
+ 					}
+-					".pcm.dmix.period_time"
++					".period_time"
+ 				]
+ 			}
+ 			default -1
+@@ -93,12 +93,12 @@ pcm.!dmix {
+ 			name {
+ 				@func concat
+ 				strings [
+-					"cards."
++					"defaults.dmix."
+ 					{
+ 						@func card_driver
+ 						card $CARD
+ 					}
+-					".pcm.dmix.periods"
++					".periods"
+ 				]
+ 			}
+ 			default 16
+-- 
+1.5.5.1
+
